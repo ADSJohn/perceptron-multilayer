@@ -9,7 +9,9 @@
 #define QTD_ARESTAS 2
 #define QTD_CAMADAS 2
 
-float *mutiplicaEntradaPorPesosAdicionaBias(float entradas[QTD_ENTRADAS], float (*pesos)[QTD_ARESTAS], float bias[QTD_CAMADAS], int camada);
+float *propagacao(float entradas[QTD_ENTRADAS], float (*pesos)[QTD_ARESTAS], float bias[QTD_CAMADAS], int camada);
+float sigmoide(float x);
+
 int main(int argc, char const *argv[])
 {
 	float entradas[2] = {0.05, 0.1};
@@ -18,14 +20,17 @@ int main(int argc, char const *argv[])
 	float bias[2] = {0.35, 0.6};
 
 	int camada = 0;
-	float *resultadosDaMultiplicacao = mutiplicaEntradaPorPesosAdicionaBias(entradas, pesos1, bias, camada);
-
-	free(resultadosDaMultiplicacao);
+	float *resultado = propagacao(entradas, pesos1, bias, camada);
+	for (int i = 0; i < QTD_ENTRADAS; i++)
+	{
+		printf("%f\n", resultado[i]);
+	}
+	free(resultado);
 	return 0;
 }
 
 /**Propagando a entrada na primeira camada*/
-float *mutiplicaEntradaPorPesosAdicionaBias(float entradas[QTD_ENTRADAS], float (*pesos)[QTD_ARESTAS], float bias[QTD_CAMADAS], int camada)
+float *propagacao(float entradas[QTD_ENTRADAS], float (*pesos)[QTD_ARESTAS], float bias[QTD_CAMADAS], int camada)
 {
 	float *resultados = (float *)malloc(QTD_ENTRADAS * sizeof(float));
 	for (int e = 0; e < QTD_ENTRADAS; e++)
@@ -35,7 +40,13 @@ float *mutiplicaEntradaPorPesosAdicionaBias(float entradas[QTD_ENTRADAS], float 
 		{
 			soma += entradas[p] * pesos[e][p];
 		}
-		resultados[e] = (soma + bias[camada]) * 1;
+		resultados[e] = sigmoide((soma + bias[camada]) * 1);
 	}
 	return resultados;
+}
+
+/**Função sigmóide*/
+float sigmoide(float x)
+{
+	return 1 / (1 + exp(-x));
 }
