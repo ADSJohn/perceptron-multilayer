@@ -3,8 +3,8 @@
 #include <math.h>
 #include <time.h>
 
-#define N_DADOS 5
-#define N_COLS 6
+#define N_LINHAS 5
+#define N_COLUNAS 6
 
 float **inicializaPesos(float **pesos, int lin, int col)
 {
@@ -24,13 +24,13 @@ float **inicializaPesos(float **pesos, int lin, int col)
     return pesos;
 }
 
-float **alocaMatriz(float **matriz, int l, int c)
+float **alocaMatriz(float **matriz, int numero_linhas, int numero_colunas)
 {
     int i = 0;
-    matriz = malloc(l * sizeof(float *));
-    for (i = 0; i < l; i++)
+    matriz = malloc(numero_linhas * sizeof(float *));
+    for (i = 0; i < numero_linhas; i++)
     {
-        matriz[i] = malloc(c * sizeof(float));
+        matriz[i] = malloc(numero_colunas * sizeof(float));
     }
     return matriz;
 }
@@ -65,9 +65,9 @@ void lerArquivo(float **dados)
         printf("Erro ao abrir o arquivo");
         exit(1);
     }
-    for (i = 0; i < N_DADOS; i++)
+    for (i = 0; i < N_LINHAS; i++)
     {
-        for (j = 0; j < N_COLS; j++)
+        for (j = 0; j < N_COLUNAS; j++)
         {
             fscanf(file, "%f", &dados[i][j]);
         }
@@ -81,12 +81,12 @@ float sigmoid(float x)
     return 1 / (1 + exp(-x));
 }
 
-void imprimeMatriz(float **matriz, int l, int c)
+void imprimeMatriz(float **matriz, int numero_linhas, int numero_colunas)
 {
     int i = 0, j = 0;
-    for (i = 0; i < l; i++)
+    for (i = 0; i < numero_linhas; i++)
     {
-        for (j = 0; j < c; j++)
+        for (j = 0; j < numero_colunas; j++)
         {
             printf("%f ", matriz[i][j]);
         }
@@ -149,15 +149,15 @@ void atualizaPesos(float **pesos, float *entradas, float *delta, float taxaApren
 int main()
 {
 
-    float **entradas = alocaMatriz(NULL, N_DADOS, N_COLS);
-    lerArquivo(entradas);
-    imprimeMatriz(entradas, N_DADOS, N_COLS);
+    float **matriz = alocaMatriz(NULL, N_LINHAS, N_COLUNAS);
+    lerArquivo(matriz);
+    imprimeMatriz(matriz, N_LINHAS, N_COLUNAS);
 
     // srand(time(NULL));
 
     // float **pesos1;
     // float **pesos2;
-    // float **entradas;
+    // float **matriz;
     // float bias[2] = {0.5, 0.3};
     // float *saidaEsperada = malloc(1 * sizeof(float));
     // saidaEsperada[0] = 0.95;
